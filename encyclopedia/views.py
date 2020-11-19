@@ -7,7 +7,7 @@ from . import util
 
 class SearchForm(forms.Form):
     search = forms.CharField(label="Search", required= False)
-    widget = forms.TextInput(attrs={'placeholder':'Search Encyclopedia'})
+    widget = forms.Textarea(attrs={'placeholder':'Search Encyclopedia'})
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label="Title", required=True)
@@ -38,8 +38,9 @@ def search(request):
         return HttpResponseRedirect(reverse("wiki:entry", args=(query,)))
 
     else:
-        return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        return render(request, "encyclopedia/error.html", {
+        "error": "Page Does Not Exist",
+        "text": "Please create a page for new users"
     })
 
 def new(request):
