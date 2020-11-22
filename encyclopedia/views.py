@@ -12,7 +12,7 @@ class SearchForm(forms.Form):
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label="Title", required=True)
-    content = forms.CharField(label="content", widget=forms.Textarea)
+    content = forms.CharField(label="Content", widget=forms.Textarea(attrs={'placeholder':'Enter markdown content'}))
 
 class EditForm(forms.Form):
     title = forms.CharField(label="")
@@ -42,7 +42,24 @@ def search(request):
     query = request.GET['q']
     if util.get_entry(query):
         return HttpResponseRedirect(reverse("wiki:entry", args=(query,)))
+    elif not util.get_entry(query):
+        entries = util.list_entries()
+        matches = []
+        for entry in entries:
+            if query in entry:
+                matches.append(entry)
 
+        if len(matches) != 0:
+            return render(request, "encyclopedia/index.html", {
+            "entries": matches
+        })
+        else:
+            matches = ["No matches found"]
+            return render(request, "encyclopedia/noResults.html", {
+        "entries": matches
+    })
+
+        
     else:
         return render(request, "encyclopedia/error.html", {
         "error": "Page Does Not Exist",

@@ -10,7 +10,10 @@
         
         {% csrf_token %}
             {{edit}}
+            <br>
         <input type="submit">
+        <h6>Please maintain all entries in markdown format (<a href="https://www.markdownguide.org/basic-syntax/">learn more here</a>)</h6>
+
     </form>
 
     <a href="{% url 'wiki:index' %}">Return to Main</a>
