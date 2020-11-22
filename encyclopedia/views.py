@@ -4,6 +4,7 @@ from django.urls import reverse
 from markdown2 import markdown
 from django import forms
 from . import util
+from random import randint
 
 class SearchForm(forms.Form):
     search = forms.CharField(label="Search", required= False)
@@ -11,7 +12,12 @@ class SearchForm(forms.Form):
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label="Title", required=True)
-    content = forms.CharField(widget=forms.Textarea)
+    content = forms.CharField(label="content", widget=forms.Textarea)
+
+class EditForm(forms.Form):
+    title = forms.CharField(label="")
+    content = forms.CharField(label="", widget=forms.Textarea)
+
 
 
 def index(request):
@@ -72,6 +78,63 @@ def new(request):
         return render(request, "encyclopedia/new.html", {
             "form": NewEntryForm()
         })
+
+def edit(request, entry):
+    if request.method == 'GET':
+        page = util.get_entry(entry)
+
+        information  = {
+            'edit': EditForm(initial={'content': page, 'title':entry}),
+        }
+        return render(request, "encyclopedia/edit.html", information)
+
+    
+
+def save_edit(request, entry):
+    if request.method == 'POST':
+        print("post valid")
+        form = EditForm(request.POST)
+        print("form recieved")
+        content = request.POST.get("content", "").strip()
+        title = request.POST.get("title", "").strip()
+        print(content)
+        print(title)
+
+        util.save_entry(title, content)
+        entry = util.get_entry(title)
+        page = markdown(entry)
+        return render(request, "encyclopedia/entry.html", {
+        "entry": title,
+        "content": page
+        })
+
+    else:
+        return render(request, "encyclopedia/error.html", {
+                    "error": "Error",
+                    "text": "Your Submission Couldn't be Saved.  Please go back."
+                })
+
+def random(request):
+    entries = util.list_entries()
+    rangeInt = len(entries)-1
+    number = randint(0,rangeInt)
+    print(entries[number])
+    randEntry = entries[number]
+    entry = util.get_entry(randEntry)
+    page = markdown(entry)
+    return render(request, "encyclopedia/entry.html", {
+    "entry": randEntry,
+    "content": page
+    })
+    
+
+
+
+
+
+
+
+
 
 
 

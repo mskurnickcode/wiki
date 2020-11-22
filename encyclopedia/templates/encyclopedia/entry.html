@@ -1,10 +1,17 @@
 {% extends "encyclopedia/layout.html" %}
-{{import markdown}
+{{ import markdown }
 {% block title %}
    Wiki: {{entry}}
 {% endblock %}
 
 {% block body %}
+
 {{ content|safe }}
+
+
+
+<a href="{% url 'wiki:edit' entry %}"> Edit This Page </a>
+<br>
+<a href="{% url 'wiki:index' %}">Return to Main</a>
 
 {% endblock %}
