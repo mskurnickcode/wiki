@@ -6,14 +6,18 @@
 
 {% block body %}
     <h1>Edit Entry<h1>
+        <p style="font-weight: lighter; font-size: medium;">Please note that by changing the name of the entry it will create a new entry instead of editing the entry. <br> Also, please maintain all entries in markdown format (<a href="https://www.markdownguide.org/basic-syntax/">learn more here</a>) </p>
     <form action="{% url 'wiki:save_edit' edit.title %}" method="post">
-        
-        {% csrf_token %}
-            {{edit}}
-            <br>
-        <input type="submit">
-        <h6>Please maintain all entries in markdown format (<a href="https://www.markdownguide.org/basic-syntax/">learn more here</a>)</h6>
+        <label>Entry Name</label>
+        {% for part in edit %}
+            <div>
+                {{part}} <br>
+            </div>
+        {% endfor %}
 
+
+        {% csrf_token %}
+        <input type="submit">
     </form>
 
     <a href="{% url 'wiki:index' %}">Return to Main</a>

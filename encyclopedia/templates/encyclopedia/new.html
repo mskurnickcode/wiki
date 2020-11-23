@@ -7,9 +7,13 @@
 {% block body %}
     <h1>Add A New Entry</h1>
     <h6>Please add all entries in markdown format (<a href="https://www.markdownguide.org/basic-syntax/">learn more here</a>)</h6>
-    <form action="{% url 'wiki:new' %}" method="POST" id="NewEntryForm" style="width: 80%; display: block;">
+    <form action="{% url 'wiki:new' %}" method="POST" id="NewEntryForm" style="width: 80%; display: block; font-weight: bolder;">
         {% csrf_token %}
-            {{form}}
+        {% for part in form %}
+            <div>
+                {{part.label}} <br> {{part}} <br>
+            </div>
+        {% endfor %}
         <input type="submit" value="Submit">
     </form>
 
